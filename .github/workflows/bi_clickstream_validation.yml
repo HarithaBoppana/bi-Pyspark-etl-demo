@@ -1,0 +1,49 @@
+name: bi_clickstream_validation
+on:
+  push:
+  workflow_dispatch:
+concurrency:
+  group: "${{ github.ref }}"
+  cancel-in-progress: true
+jobs:
+  tests:
+    runs-on:  [self-hosted,Linux,X64,healthgrades]
+    container:
+      image: 958306274796.dkr.ecr.us-east-1.amazonaws.com/hgd-clickstream-sf-load
+    timeout-minutes: 60
+    steps:
+    - uses: healthgrades/cleanup-action@78b29557d381b4ff9531ae43759eb26a62279be6
+    - uses: healthgrades/shared-github-workflows/actions/healthgrades-checkout@v1
+      with:
+        HG_ACTIONS_SERVICE_ACCOUNT_APP_ID: ${{ secrets.HG_ACTIONS_SERVICE_ACCOUNT_APP_ID }}
+        HG_ACTIONS_SERVICE_ACCOUNT_APP_PRIVATE_KEY: ${{ secrets.HG_ACTIONS_SERVICE_ACCOUNT_APP_PRIVATE_KEY }}
+    - name: Run Tests
+      run: ". ./test.sh"
+      shell: bash
+  build-and-push:
+    needs: tests
+    runs-on:  [self-hosted,Linux,X64,healthgrades]
+    timeout-minutes: 60
+    steps:
+    - uses: healthgrades/cleanup-action@78b29557d381b4ff9531ae43759eb26a62279be6
+    - name: Generate installation token
+      id: generate_token
+      uses: tibdex/github-app-token@v1
+      with:
+        app_id: ${{ secrets.HG_ACTIONS_SEVICE_ACCOUNT_APP_ID }}
+        private_key: ${{ secrets.HG_ACTIONS_SEVICE_ACCOUNT_APP_PRIVATE_KEY }}
+
+    - run: ls -la
+    - uses: healthgrades/shared-github-workflows/actions/healthgrades-checkout@v1
+      with:
+        HG_ACTIONS_SERVICE_ACCOUNT_APP_ID: ${{ secrets.HG_ACTIONS_SERVICE_ACCOUNT_APP_ID }}
+        HG_ACTIONS_SERVICE_ACCOUNT_APP_PRIVATE_KEY: ${{ secrets.HG_ACTIONS_SERVICE_ACCOUNT_APP_PRIVATE_KEY }}
+    - run: echo ${{ steps.generate_token.outputs.token }} > service_account_github_token.txt   
+    - env:
+        OCTOPUS_CLI_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
+      run: | 
+        dotnet tool restore
+        dotnet cake --target=Build
+        dotnet cake --target=Build-Push-Docker
+        dotnet cake --target=PushOctopusPackage
+    # 'coverage' was not transformed because there is no suitable equivalent in GitHub Actions.

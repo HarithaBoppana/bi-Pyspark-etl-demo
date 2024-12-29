@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bi_clickstream_validation
+  description: clickstream_validation
+spec:
+  type: service # can be one of: service, library, website, iac-pipeline
+  lifecycle: production # can be one of: experimental, production, deprecated
+  owner: team-hg-bi-engineering # your existing tech team in Backstage, i.e. team-developer-platforms

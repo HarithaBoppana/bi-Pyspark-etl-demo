@@ -1,0 +1,8 @@
+python-edp-common-utils @ git+ssh://git@github.com/healthgrades/hcp-python-edp-common-utils-etl
+python-edp-snowflake @ git+ssh://git@github.com/healthgrades/hcp-python-edp-snowflake-etl
+python_bi_marketplace_common_utils @ git+ssh://git@github.com/healthgrades/python-bi-marketplace-common-utils
+hg_hcp_db_utils @ git+ssh://git@github.com/healthgrades/hcp-python-hcp-db-utils-etl
+jsonschema==3.0.2
+tenacity==6.2.0
+PrettyTable==0.7.2
+

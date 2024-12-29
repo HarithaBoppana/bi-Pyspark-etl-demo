@@ -1,0 +1,9 @@
+# python-edp-snowflake
+# requests
+# jsonschema
+# python-json-logger
+# pandas
+# hg_hcp_db_utils
+# PyJWT
+# tenacity
+# boto3

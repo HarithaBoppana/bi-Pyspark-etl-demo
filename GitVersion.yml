@@ -1,0 +1,13 @@
+# mode: ContinuousDeployment
+mode: mainline
+# mode: ContinuousDelivery
+continuous-delivery-fallback-tag: ''
+branches:
+  feature:
+    regex: ^features?[/-]
+    tag: useBranchName
+    increment: Minor
+  hotfix:
+    regex: ^hotfix[/-]
+    tag: useBranchName
+    increment: Patch
