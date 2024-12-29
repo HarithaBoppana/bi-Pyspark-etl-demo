@@ -87,7 +87,12 @@ class ELTProcessor:
 
 def main():
     # Configuration values
-   
+    app_name = "ELT-Upload"
+    access_key = "AKIAWNHTHMZCH6MZW6"
+    secret_key = "HX7ocpfzdcjLMpYrEzi+WMuhB6o7hRpkXlOk"
+    endpoint = "s3.ap-southeast-2.amazon\aws.com"
+    url = "https://jsonplaceholder.typicode.com/posts"
+    bucket_name = "pysparrk-test"
     output_path = f"s3a://{bucket_name}/transformed_data/output.json"
 
     # Create an instance of the ELTProcessor class
